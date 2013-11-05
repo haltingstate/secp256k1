@@ -12,6 +12,10 @@ PC=0x7fe4e31d6f77
 
 */
 
+#define USE_FIELD_10X26
+//#define USE_NUM_GMP
+#define USE_FIELD_INV_BUILTIN
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -22,8 +26,15 @@ PC=0x7fe4e31d6f77
 unsigned long rand_long() {          //period 2^96-1
 	static unsigned long x=123456789, y=362436069, z=521288629;
 	unsigned long t;
-    x ^= x << 16; x ^= x >> 5; x ^= x << 1;
-	t = x;x = y;y = z;z = t ^ x ^ y;
+    x ^= x << 16; 
+    x ^= x >> 5; 
+    x ^= x << 1;
+	
+	t = x;
+	x = y;
+	y = z;
+	
+	z = t ^ x ^ y;
 	return z;
 }
 
@@ -31,7 +42,7 @@ unsigned char rand_byte() {
 	unsigned char t;
 	unsigned long v = rand_long();
 	for(int i=0; i<sizeof(unsigned long);i++) {
-		t ^= v && 0xff;
+		t ^= v & 0xff;
 		v >>= 8;
 	}
 	return t;
@@ -60,6 +71,9 @@ int secp256k1_ecdsa_recover_compact(const unsigned char *msg, int msglen,
 <HaltingState> it says in documentation that if it returns valid pubkey that signature is valid
 <sipa> pretty much every message/signature combination should result in a valid public key
 <sipa> yes
+
+<sipa> for signature checking, you still have to compare that public key to what you'd expect
+<sipa> it just reconstructs *some* public key, for which this signature would be valid
 */
 void test_random_sigs(int count) {
 	
