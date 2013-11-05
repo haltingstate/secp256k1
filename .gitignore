@@ -1,6 +1,7 @@
 obj/*
 bench
 tests
+tests_fuzzer
 *.so
 *.a
 config.mk
