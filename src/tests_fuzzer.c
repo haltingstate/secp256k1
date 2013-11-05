@@ -39,7 +39,7 @@ unsigned long rand_long() {          //period 2^96-1
 }
 
 unsigned char rand_byte() {
-	unsigned char t;
+	unsigned char t = 0;
 	unsigned long v = rand_long();
 	for(int i=0; i<sizeof(unsigned long);i++) {
 		t ^= v & 0xff;
