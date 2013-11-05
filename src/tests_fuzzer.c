@@ -49,6 +49,18 @@ int secp256k1_ecdsa_recover_compact(const unsigned char *msg, int msglen,
                                     int compressed, int recid);
 */
 
+/* Recover an ECDSA public key from a compact signature.
+ *  Returns: 1: public key succesfully recovered (which guarantees a correct signature).
+ *           0: otherwise.
+*/
+ 
+/*
+<sipa> it's not a signature check
+<sipa> it computes a public for which this is a valid signature
+<HaltingState> it says in documentation that if it returns valid pubkey that signature is valid
+<sipa> pretty much every message/signature combination should result in a valid public key
+<sipa> yes
+*/
 void test_random_sigs(int count) {
 	
 	int error_count = 0;
