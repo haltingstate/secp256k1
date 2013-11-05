@@ -51,6 +51,7 @@ int secp256k1_ecdsa_recover_compact(const unsigned char *msg, int msglen,
 
 void test_random_sigs(int count) {
 	
+	int error_count = 0;
 	for(int i=0;i<count; i++) {
 		
 		unsigned char sig[64];
@@ -67,8 +68,10 @@ void test_random_sigs(int count) {
             pubkey, &pubkeylen,
             1, (int)(rand_byte()%4)
         );
-		if(ret == 1) { printf("holy fuck\n"); }
+		if(ret == 1) { error_count++; }
 	}
+	
+	printf("test_random_sigs: %d out of %d randomly generated messages/signatures returned 1 for secp256k1_ecdsa_recover_compact\n", error_count, count);
 	
 }
 
