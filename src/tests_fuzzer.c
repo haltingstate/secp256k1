@@ -1,14 +1,14 @@
-// Copyright (c) 2013 Brandon Smietana ( HaltingState )
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+// Contributed by Brandon Smietana / HaltingState
 
 /*
-	This is a fuzzer.  Failure of these tests suggests but does not imply a bug.
+	This is a fuzzer. It inputs random data to detect failures. 
+	Failure of these tests suggests but does not imply a bug.
+	
 	This was used to find the following two bugs:
-
-secp256.test: /home/atomos/secp256/./secp256k1/src/impl/num_gmp.h:55: secp256k1_num_get_bin: Assertion `len-shift <= rlen' failed.
-SIGABRT: abort
-PC=0x7fe4e31d6f77
+	secp256.test: /home/atomos/secp256/./secp256k1/src/impl/num_gmp.h:55: secp256k1_num_get_bin: Assertion `len-shift <= rlen' failed.
+	SIGABRT: abort
 
 */
 
@@ -53,27 +53,9 @@ void rand_bytes(unsigned char* b, int n) {
 			b[i] = rand_byte();
 	}
 }
-/*
-int secp256k1_ecdsa_recover_compact(const unsigned char *msg, int msglen,
-                                    const unsigned char *sig64,
-                                    unsigned char *pubkey, int *pubkeylen,
-                                    int compressed, int recid);
-*/
 
-/* Recover an ECDSA public key from a compact signature.
- *  Returns: 1: public key succesfully recovered (which guarantees a correct signature).
- *           0: otherwise.
-*/
- 
 /*
-<sipa> it's not a signature check
-<sipa> it computes a public for which this is a valid signature
-<HaltingState> it says in documentation that if it returns valid pubkey that signature is valid
-<sipa> pretty much every message/signature combination should result in a valid public key
-<sipa> yes
-
-<sipa> for signature checking, you still have to compare that public key to what you'd expect
-<sipa> it just reconstructs *some* public key, for which this signature would be valid
+	Generate random compact signatures and messagse and check
 */
 void test_random_sigs(int count) {
 	
